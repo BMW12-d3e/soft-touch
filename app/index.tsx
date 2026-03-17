@@ -8,6 +8,7 @@ import * as React from 'react';
 import { Image, type ImageStyle, View } from 'react-native';
 import Feather from '@expo/vector-icons/Feather';
 import Foundation from '@expo/vector-icons/Foundation';
+import AntDesign from '@expo/vector-icons/AntDesign';
 
 const LOGO = {
   light: require('@/assets/images/react-native-reusables-light.png'),
@@ -34,6 +35,9 @@ export default function Screen() {
       <View className="flex-1 items-center justify-center gap-8 p-4">
           <Text className="text-5xl font-black">Welcome to Soft-touch</Text>
           <View className="flex flex-row gap-4">
+              <Link href="/(auth)/login">
+                <Button><Text>Logout <AntDesign name="logout" size={24}/></Text></Button>
+              </Link>
               <Link href="profilePage">
                 <Button>
                 <Text>User Profile <Feather name="user" size={24} /></Text>
