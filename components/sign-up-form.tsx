@@ -14,6 +14,7 @@ import { Text } from '@/components/ui/text';
 import * as React from 'react';
 import { Pressable, TextInput, View } from 'react-native';
 import { Link } from 'expo-router';
+import { DatePickerDemo } from './datepicker';
 
 export function SignUpForm() {
   const passwordInputRef = React.useRef<TextInput>(null);
@@ -38,6 +39,46 @@ export function SignUpForm() {
         <CardContent className="gap-6">
           <View className="gap-6">
             <View className="gap-1.5">
+              <Label htmlFor="vorname">Vorname</Label>
+              <Input
+                id="vorname"
+                placeholder="Max"
+                autoComplete="name"
+                autoCapitalize="sentences"
+                // onSubmitEditing={onEmailSubmitEditing}
+                returnKeyType="next"
+                submitBehavior="submit"
+              />
+            </View>
+            <View className="gap-1.5">
+              <Label htmlFor="nachname">Nachname</Label>
+              <Input
+                id="nachname"
+                placeholder="Mustermann"
+                // keyboardType="text"
+                autoComplete="email"
+                autoCapitalize="words"
+                // onSubmitEditing={onEmailSubmitEditing}
+                returnKeyType="next"
+                submitBehavior="submit"
+              />
+            </View>
+            {/* <View className="gap-1.5">
+              <Label htmlFor="geburtsdatum">Geburtsdatum</Label>
+              <Date></Date>
+              <Input
+                id="geburtsdatum"
+                placeholder="19.04.1990"
+                keyboardType="numeric"
+                autoComplete="birthdate-full"
+                // autoCapitalize="words"
+                // onSubmitEditing={onEmailSubmitEditing}
+                returnKeyType="next"
+                submitBehavior="submit"
+              />
+            </View> */}
+            <DatePickerDemo />
+            <View className="gap-1.5">
               <Label htmlFor="email">Email</Label>
               <Input
                 id="email"
@@ -60,6 +101,18 @@ export function SignUpForm() {
                 secureTextEntry
                 returnKeyType="send"
                 onSubmitEditing={onSubmit}
+              />
+            </View>
+            <View className="gap-1.5">
+              <View className="flex-row items-center">
+                <Label htmlFor="password">Password verifizieren</Label>
+              </View>
+              <Input
+                // ref={passwordInputRef}
+                // id="password"
+                secureTextEntry
+                // returnKeyType="send"
+                // onSubmitEditing={onSubmit}
               />
             </View>
             <Button className="w-full" onPress={onSubmit}>
