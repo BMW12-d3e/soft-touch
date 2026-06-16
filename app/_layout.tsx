@@ -2,6 +2,7 @@ import '@/global.css';
 
 import { Button } from '@/components/ui/button';
 import { Icon } from '@/components/ui/icon';
+import { Text } from '@/components/ui/text';
 import { NAV_THEME } from '@/lib/theme';
 import { ThemeProvider } from '@react-navigation/native';
 import { PortalHost } from '@rn-primitives/portal';
@@ -39,9 +40,15 @@ function HeaderActions() {
         className="ios:size-9 rounded-full">
         <Icon as={colorScheme === 'dark' ? MoonStarIcon : SunIcon} className="size-5" />
       </Button>
+      <Link href="/settingsPage" asChild>
+        <Button size="icon" variant="ghost">
+          <Icon as={Cog} className="size-5" />
+        </Button>
+      </Link>
     </View>
   );
 }
+
 
 export default function RootLayout() {
   const { colorScheme } = useColorScheme();
@@ -51,26 +58,16 @@ export default function RootLayout() {
       <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
       {/* <Stack screenOptions={{ headerRight: () => <HeaderActions /> }} /> */}
       <Tabs screenOptions={{
-        headerShown: false,
-        // tabBarActiveTintColor: colors.active,
-        // tabBarInactiveTintColor: colors.inactive,
-        // tabBarStyle: {
-        //   backgroundColor: colors.background,
-        //   borderTopColor: colors.border,
-        // },
+        headerShown: true,
+        headerRight: () => (
+          <HeaderActions />
+        ),
       }}>
         <Tabs.Screen
           name="shopping"
           options={{
             title: 'Bookstore',
             tabBarIcon: ({ color, size }) => <Store color={color} size={size} />,
-          }}
-        />
-        <Tabs.Screen
-          name="book"
-          options={{
-            title: 'Library',
-            tabBarIcon: ({ color, size }) => <SquareLibrary color={color} size={size} />,
           }}
         />
         <Tabs.Screen
@@ -81,10 +78,18 @@ export default function RootLayout() {
           }}
         />
         <Tabs.Screen
+          name="book"
+          options={{
+            title: 'Library',
+            tabBarIcon: ({ color, size }) => <SquareLibrary color={color} size={size} />,
+          }}
+        />
+        <Tabs.Screen
           name="profilePage"
           options={{
             title: 'Profile',
             tabBarIcon: ({ color, size }) => <User color={color} size={size} />,
+            href: null
           }}
         />
         <Tabs.Screen
@@ -92,12 +97,13 @@ export default function RootLayout() {
           options={{
             title: 'Settings',
             tabBarIcon: ({ color, size }) => <Cog color={color} size={size} />,
+            href: null
           }}
         />
-         <Tabs.Screen
+        <Tabs.Screen
           name="(auth)"
-          options= {{
-            href : null
+          options={{
+            href: null
           }}
         />
       </Tabs>
