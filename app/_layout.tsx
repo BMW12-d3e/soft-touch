@@ -10,6 +10,10 @@ import { StatusBar } from 'expo-status-bar';
 import { LogOut, MoonStarIcon, SunIcon, User } from 'lucide-react-native';
 import { useColorScheme } from 'nativewind';
 import { View } from 'react-native';
+import React from 'react';
+import { Tabs } from 'expo-router';
+import { Cog, House, SquareLibrary, Store } from 'lucide-react';
+
 
 export { ErrorBoundary } from 'expo-router';
 
@@ -45,7 +49,58 @@ export default function RootLayout() {
   return (
     <ThemeProvider value={NAV_THEME[colorScheme ?? 'light']}>
       <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
-      <Stack screenOptions={{ headerRight: () => <HeaderActions /> }} />
+      {/* <Stack screenOptions={{ headerRight: () => <HeaderActions /> }} /> */}
+      <Tabs screenOptions={{
+        headerShown: false,
+        // tabBarActiveTintColor: colors.active,
+        // tabBarInactiveTintColor: colors.inactive,
+        // tabBarStyle: {
+        //   backgroundColor: colors.background,
+        //   borderTopColor: colors.border,
+        // },
+      }}>
+        <Tabs.Screen
+          name="shopping"
+          options={{
+            title: 'Bookstore',
+            tabBarIcon: ({ color, size }) => <Store color={color} size={size} />,
+          }}
+        />
+        <Tabs.Screen
+          name="book"
+          options={{
+            title: 'Library',
+            tabBarIcon: ({ color, size }) => <SquareLibrary color={color} size={size} />,
+          }}
+        />
+        <Tabs.Screen
+          name="index"
+          options={{
+            title: 'Home',
+            tabBarIcon: ({ color, size }) => <House color={color} size={size} />,
+          }}
+        />
+        <Tabs.Screen
+          name="profilePage"
+          options={{
+            title: 'Profile',
+            tabBarIcon: ({ color, size }) => <User color={color} size={size} />,
+          }}
+        />
+        <Tabs.Screen
+          name="settingsPage"
+          options={{
+            title: 'Settings',
+            tabBarIcon: ({ color, size }) => <Cog color={color} size={size} />,
+          }}
+        />
+         <Tabs.Screen
+          name="(auth)"
+          options= {{
+            href : null
+          }}
+        />
+      </Tabs>
       <PortalHost />
     </ThemeProvider>
   );
