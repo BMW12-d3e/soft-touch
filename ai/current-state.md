@@ -86,6 +86,7 @@ soft-touch/
 │   ├── architecture/           # Architecture diagrams & technical decision records (TDRs)
 │   └── glossary.md             # Ubiquitous domain language & terminology mappings
 ├── lib/                        # Shared utility code & configuration
+│   ├── book-store.ts           # Reactive in-memory book store (useSyncExternalStore)
 │   ├── theme.ts                # Light / Dark theme tokens & React Navigation theme bridge
 │   └── utils.ts                # Class name concatenator (clsx + tailwind-merge)
 ├── .gitignore                  # Git ignore definitions
@@ -156,8 +157,8 @@ flowchart TD
 | `/` | `app/index.tsx` | Main Home Screen (Tab: "Home") | Basic welcome header banner |
 | `/shopping` | `app/shopping/index.tsx` | Bookstore Screen (Tab: "Bookstore") | Stub text ("You can buy your books here") |
 | `/shopping/*` | `app/shopping/_layout.tsx` | Bookstore sub-tabs | Duplicate scaffold copy of book tabs |
-| `/book` | `app/book/index.tsx` | Personal Library (Subtab: "Bookshelf") | Render list of 2 sample hardcoded books |
-| `/book/add` | `app/book/add.tsx` | Add Book (Subtab: "Add Book") | Stub placeholder screen |
+| `/book` | `app/book/index.tsx` | Personal Library (Subtab: "Bookshelf") | Reactive list connected to `lib/book-store.ts` |
+| `/book/add` | `app/book/add.tsx` | Add Book (Subtab: "Add Book") | Interactive form simulation with in-memory image picker (Data URL / presets), in-memory store dispatch, and preview |
 | `/book/recommendations` | `app/book/recommendations.tsx` | Recommendations (Subtab: "Recommendations") | Stub placeholder screen |
 | `/profilePage` | `app/profilePage.tsx` | User Profile (Header shortcut) | Stub text ("Welcome to your Profile") |
 | `/settingsPage` | `app/settingsPage.tsx` | Application Settings (Header shortcut) | Stub text ("Welcome to your settings") |
