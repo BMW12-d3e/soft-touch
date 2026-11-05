@@ -1,33 +1,48 @@
-import { BookCard, type Book } from '@/components/book-card';
-import { Text } from '@/components/ui/text';
+import * as React from 'react';
 import { ScrollView, View } from 'react-native';
 
-const SAMPLE_BOOKS: Book[] = [
-  {
-    title: 'Der Prozess',
-    author: 'Franz Kafka',
-    isbn: '978-3-15-009676-7',
-    coverUri: 'https://covers.openlibrary.org/b/isbn/9783150096767-M.jpg',
-    description:
-      'Josef K. wird eines Morgens verhaftet, ohne dass er weiß, was ihm vorgeworfen wird.',
-  },
-  {
-    title: 'Faust I',
-    author: 'Johann Wolfgang von Goethe',
-    isbn: '978-3-15-000001-3',
-    description: 'Das Meisterwerk der deutschen Literatur.',
-  },
-];
+import { BookCard, type Book } from '@/components/book-card';
+import { EditBookModal } from '@/components/edit-book-modal';
+import { Text } from '@/components/ui/text';
+import { useBooks } from '@/lib/book-store';
 
 export default function BookshelfTab() {
+  const { books, updateBook } = useBooks();
+  const [editingBook, setEditingBook] = React.useState<Book | null>(null);
+
+  function handleSaveEdit(originalIsbn: string, updatedBook: Book) {
+    updateBook(originalIsbn, updatedBook);
+    setEditingBook(null);
+  }
+
   return (
-    <ScrollView className="flex-1">
-      <View className="p-4 gap-4">
-        <Text variant="h3">Ihre Bücher</Text>
-        {SAMPLE_BOOKS.map((book) => (
-          <BookCard key={book.isbn} book={book} />
-        ))}
-      </View>
-    </ScrollView>
+    <>
+      <ScrollView className="flex-1 bg-background" contentContainerClassName="p-4 pb-12 gap-4">
+        <View className="flex-row items-baseline justify-between">
+          <Text variant="h3">Ihre Bücher</Text>
+          <Text variant="muted" className="text-sm">
+            {books.length} {books.length === 1 ? 'Buch' : 'Bücher'}
+          </Text>
+        </View>
+
+        <View className="gap-3">
+          {books.map((book) => (
+            <BookCard
+              key={book.isbn}
+              book={book}
+              onEdit={(targetBook) => setEditingBook(targetBook)}
+            />
+          ))}
+        </View>
+      </ScrollView>
+
+      {/* Edit Book Modal */}
+      <EditBookModal
+        book={editingBook}
+        visible={Boolean(editingBook)}
+        onClose={() => setEditingBook(null)}
+        onSave={handleSaveEdit}
+      />
+    </>
   );
 }

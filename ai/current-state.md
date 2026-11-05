@@ -77,8 +77,9 @@ soft-touch/
 │   │   ├── popover.tsx         # Popover component built on @radix-ui/react-popover
 │   │   ├── separator.tsx       # Visual divider built on @rn-primitives/separator
 │   │   └── text.tsx            # Custom Text supporting variants (h1-h4, p, muted, lead, code)
-│   ├── book-card.tsx           # Book summary presentation card with cover image support
+│   ├── book-card.tsx           # Book summary presentation card with cover image support and onEdit action
 │   ├── datepicker.tsx          # Cross-platform date picker demo (date-fns + DateTimePicker)
+│   ├── edit-book-modal.tsx     # Book details & cover location editor modal
 │   ├── sign-in-form.tsx        # Email & password login form with social connection links
 │   ├── sign-up-form.tsx        # Registration form (first name, last name, datepicker, email, password)
 │   └── social-connections.tsx  # OAuth provider action buttons (Apple, Google, GitHub)
@@ -157,7 +158,7 @@ flowchart TD
 | `/` | `app/index.tsx` | Main Home Screen (Tab: "Home") | Basic welcome header banner |
 | `/shopping` | `app/shopping/index.tsx` | Bookstore Screen (Tab: "Bookstore") | Stub text ("You can buy your books here") |
 | `/shopping/*` | `app/shopping/_layout.tsx` | Bookstore sub-tabs | Duplicate scaffold copy of book tabs |
-| `/book` | `app/book/index.tsx` | Personal Library (Subtab: "Bookshelf") | Reactive list connected to `lib/book-store.ts` |
+| `/book` | `app/book/index.tsx` | Personal Library (Subtab: "Bookshelf") | Reactive list connected to `lib/book-store.ts` with inline Book details/cover editing modal |
 | `/book/add` | `app/book/add.tsx` | Add Book (Subtab: "Add Book") | Interactive form simulation with in-memory image picker (Data URL / presets), in-memory store dispatch, and preview |
 | `/book/recommendations` | `app/book/recommendations.tsx` | Recommendations (Subtab: "Recommendations") | Stub placeholder screen |
 | `/profilePage` | `app/profilePage.tsx` | User Profile (Header shortcut) | Stub text ("Welcome to your Profile") |

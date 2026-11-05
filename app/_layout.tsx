@@ -8,12 +8,11 @@ import { ThemeProvider } from '@react-navigation/native';
 import { PortalHost } from '@rn-primitives/portal';
 import { Link, Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { LogOut, MoonStarIcon, SunIcon, User } from 'lucide-react-native';
+import { Cog, House, LogOut, MoonStarIcon, SquareLibrary, Store, SunIcon, User } from 'lucide-react-native';
 import { useColorScheme } from 'nativewind';
 import { View } from 'react-native';
 import React from 'react';
 import { Tabs } from 'expo-router';
-import { Cog, House, SquareLibrary, Store } from 'lucide-react';
 
 
 export { ErrorBoundary } from 'expo-router';
