@@ -47,6 +47,7 @@ Concepts relating to the reader's personal collection, reading habits, and curat
 | :--- | :--- | :--- | :--- |
 | **Personal Library** | *Persönliche Bibliothek* | The aggregate collection of all books owned, saved, or tracked by an individual reader. | Scoped to a specific authenticated user account. |
 | **Bookshelf** | *Bücherregal* | A curated view or collection within the Personal Library (e.g., "Currently Reading", "Favorites", or custom shelf). | Default shelf contains all tracked volumes. |
+| **Book Series / Group** | *Buchreihe / Buchgruppe* | Automatic clustering of volumes sharing a base title, volume numbers, or subtitles (e.g. "Buch der Träume 1 & 2", "Faust I & II"). | Formed dynamically when 2+ books share a normalized title stem. Supports collapsible section views on the Bookshelf. |
 | **Book Item / Entry** | *Bucheintrag* | A record representing a specific volume added to a reader's Personal Library. | References bibliographic metadata plus reader-specific state (date added, notes, rating). |
 | **Reading Status** | *Lesestatus* | The current progression state of a book in the reader's lifecycle. | Standard states: `WANT_TO_READ`, `READING`, `COMPLETED`, `ON_HOLD`, `DROPPED`. |
 | **Reading Progress** | *Lesefortschritt* | Metric measuring how far the reader has progressed through a volume. | Expressed in page count (`currentPage / totalPages`) or percentage (`0 - 100%`). |
@@ -72,7 +73,7 @@ Concepts defining universal, edition-specific book publication data:
 | **Publisher** | *Verlag* | The commercial company or entity that published the volume. | Optional bibliographic field. |
 | **Publication Date** | *Erscheinungsdatum* | The calendar date or year the edition was released. | ISO-8601 formatted date string (`YYYY-MM-DD` or `YYYY`). |
 | **Page Count** | *Seitenzahl* | The total number of pages in the printed edition. | Positive integer (`> 0`). |
-| **Genre / Category** | *Genre / Sachgebiet* | Categorical classification (e.g., Fiction, Philosophy, Drama, Sci-Fi). | Normalized taxonomy tag. |
+| **Genre / Category** | *Genre / Sachgebiet* | Standardized literary or non-fiction classification (e.g., Fantasy, Klassiker, Drama, Philosophie, etc.). | Multi-select string array (`genres?: string[]`). Used for top-level bookshelf categorization. |
 
 ---
 

@@ -77,9 +77,10 @@ soft-touch/
 │   │   ├── popover.tsx         # Popover component built on @radix-ui/react-popover
 │   │   ├── separator.tsx       # Visual divider built on @rn-primitives/separator
 │   │   └── text.tsx            # Custom Text supporting variants (h1-h4, p, muted, lead, code)
-│   ├── book-card.tsx           # Book summary presentation card with cover image support and onEdit action
+│   ├── book-card.tsx           # Book summary presentation card with cover image support, genre badges, and onEdit action
 │   ├── datepicker.tsx          # Cross-platform date picker demo (date-fns + DateTimePicker)
-│   ├── edit-book-modal.tsx     # Book details & cover location editor modal
+│   ├── edit-book-modal.tsx     # Book details, cover location & genre editor modal
+│   ├── genre-select.tsx        # Multi-select dropdown component for book genres
 │   ├── sign-in-form.tsx        # Email & password login form with social connection links
 │   ├── sign-up-form.tsx        # Registration form (first name, last name, datepicker, email, password)
 │   └── social-connections.tsx  # OAuth provider action buttons (Apple, Google, GitHub)
@@ -87,7 +88,9 @@ soft-touch/
 │   ├── architecture/           # Architecture diagrams & technical decision records (TDRs)
 │   └── glossary.md             # Ubiquitous domain language & terminology mappings
 ├── lib/                        # Shared utility code & configuration
+│   ├── book-grouping.ts        # Automatic title similarity, series accordions & genre clustering utility
 │   ├── book-store.ts           # Reactive in-memory book store (useSyncExternalStore)
+│   ├── genres.ts               # Standard book genre definitions & taxonomy
 │   ├── theme.ts                # Light / Dark theme tokens & React Navigation theme bridge
 │   └── utils.ts                # Class name concatenator (clsx + tailwind-merge)
 ├── .gitignore                  # Git ignore definitions
@@ -158,7 +161,7 @@ flowchart TD
 | `/` | `app/index.tsx` | Main Home Screen (Tab: "Home") | Basic welcome header banner |
 | `/shopping` | `app/shopping/index.tsx` | Bookstore Screen (Tab: "Bookstore") | Stub text ("You can buy your books here") |
 | `/shopping/*` | `app/shopping/_layout.tsx` | Bookstore sub-tabs | Duplicate scaffold copy of book tabs |
-| `/book` | `app/book/index.tsx` | Personal Library (Subtab: "Bookshelf") | Reactive list connected to `lib/book-store.ts` with inline Book details/cover editing modal |
+| `/book` | `app/book/index.tsx` | Personal Library (Subtab: "Bookshelf") | Reactive list connected to `lib/book-store.ts` with automatic title/series clustering (`lib/book-grouping.ts`), collapsible groups, Book details/edit/delete modal, and empty state |
 | `/book/add` | `app/book/add.tsx` | Add Book (Subtab: "Add Book") | Interactive form simulation with in-memory image picker (Data URL / presets), in-memory store dispatch, and preview |
 | `/book/recommendations` | `app/book/recommendations.tsx` | Recommendations (Subtab: "Recommendations") | Stub placeholder screen |
 | `/profilePage` | `app/profilePage.tsx` | User Profile (Header shortcut) | Stub text ("Welcome to your Profile") |
@@ -180,11 +183,13 @@ export type Book = {
   isbn: string;         // International Standard Book Number
   coverUri?: string;    // Optional remote URI for cover art
   description?: string; // Optional narrative summary
+  genres?: string[];    // Optional multi-select literary/non-fiction genres
 };
 ```
 *Current sample records:*
-- *Kafka, Franz*: *Der Prozess* (ISBN `978-3-15-009676-7`, OpenLibrary cover image)
-- *Goethe, Johann Wolfgang von*: *Faust I* (ISBN `978-3-15-000001-3`, without cover)
+- 16 seeded in-memory books across multiple genres (*Fantasy, Science Fiction, Dystopie, Krimi & Thriller, Klassiker, Drama, Philosophie, Lyrik, Abenteuer, Biografie, Historischer Roman*).
+- 4 multi-volume series clusters (*Buch der Träume 1-3, Projekt Chronos 1-2, Faust I-II, Schatten über Berlin Fall 1-2*).
+- 7 standalone works with individual themes and dedicated cover art.
 
 ### 2. User & Authentication Models
 No formal TypeScript interface is defined yet for users. The registration form collects:

@@ -20,6 +20,7 @@ import {
 } from 'lucide-react-native';
 
 import { BookCard, type Book } from '@/components/book-card';
+import { GenreSelect } from '@/components/genre-select';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -44,6 +45,7 @@ export default function AddBookTab() {
   const [isbn, setIsbn] = React.useState('');
   const [coverUri, setCoverUri] = React.useState('');
   const [description, setDescription] = React.useState('');
+  const [genres, setGenres] = React.useState<string[]>([]);
   const [showUrlFallback, setShowUrlFallback] = React.useState(false);
 
   // UI status states
@@ -63,6 +65,7 @@ export default function AddBookTab() {
     setIsbn('');
     setCoverUri('');
     setDescription('');
+    setGenres([]);
     setShowUrlFallback(false);
     setErrorMessage(null);
   }
@@ -114,6 +117,7 @@ export default function AddBookTab() {
       isbn: isbn.trim(),
       coverUri: coverUri.trim() || undefined,
       description: description.trim() || undefined,
+      genres: genres.length > 0 ? genres : undefined,
     };
 
     // Commit to in-memory store
@@ -123,15 +127,32 @@ export default function AddBookTab() {
     resetForm();
   }
 
-  // Pre-fill a sample book for quick testing
-  function handleFillSample() {
-    setTitle('Die Verwandlung');
-    setAuthor('Franz Kafka');
-    setIsbn('978-3-15-009900-3');
-    setCoverUri('https://covers.openlibrary.org/b/isbn/9783150099003-M.jpg');
-    setDescription(
-      'Als Gregor Samsa eines Morgens aus unruhigen Träumen erwachte, fand er sich in seinem Bett zu einem ungeheuren Ungeziefer verwandelt.'
-    );
+  // Pre-fill sample books for quick testing (e.g. series grouping)
+  function handleFillSample(preset: 'verwandlung' | 'traeume1' | 'traeume2' = 'verwandlung') {
+    if (preset === 'traeume1') {
+      setTitle('Buch der Träume 1');
+      setAuthor('Kerstin Gier');
+      setIsbn('978-3-596-52100-5');
+      setCoverUri('https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=300&auto=format&fit=crop&q=80');
+      setDescription('Das erste Buch der Träume.');
+      setGenres(['Fantasy', 'Jugendbuch (Young Adult)', 'Romantik / Liebesroman']);
+    } else if (preset === 'traeume2') {
+      setTitle('Buch der Träume 2');
+      setAuthor('Kerstin Gier');
+      setIsbn('978-3-596-52101-2');
+      setCoverUri('https://images.unsplash.com/photo-1543002588-bfa74002ed7e?w=300&auto=format&fit=crop&q=80');
+      setDescription('Das zweite Buch der Träume.');
+      setGenres(['Fantasy', 'Jugendbuch (Young Adult)', 'Romantik / Liebesroman']);
+    } else {
+      setTitle('Die Verwandlung');
+      setAuthor('Franz Kafka');
+      setIsbn('978-3-15-009900-3');
+      setCoverUri('https://covers.openlibrary.org/b/isbn/9783150099003-M.jpg');
+      setDescription(
+        'Als Gregor Samsa eines Morgens aus unruhigen Träumen erwachte, fand er sich in seinem Bett zu einem ungeheuren Ungeziefer verwandelt.'
+      );
+      setGenres(['Klassiker', 'Dystopie', 'Philosophie']);
+    }
     setErrorMessage(null);
   }
 
@@ -157,22 +178,46 @@ export default function AddBookTab() {
         )}
 
         {/* Header */}
-        <View className="gap-1">
+        <View className="gap-2">
           <View className="flex-row items-center justify-between">
             <Text variant="h3">Add Book</Text>
-            <Button
-              variant="outline"
-              size="sm"
-              onPress={handleFillSample}
-              className="flex-row items-center gap-1.5"
-            >
-              <Icon as={Sparkles} className="size-3.5 text-muted-foreground" />
-              <Text className="text-xs">Beispiel einfügen</Text>
-            </Button>
           </View>
           <Text variant="muted">
             Fügen Sie ein neues Buch zu Ihrer persönlichen Bibliothek hinzu.
           </Text>
+
+          {/* Quick Sample Presets */}
+          <View className="flex-row items-center gap-2 flex-wrap pt-1">
+            <Text variant="muted" className="text-xs font-medium">
+              Schnelltest:
+            </Text>
+            <Button
+              variant="outline"
+              size="sm"
+              onPress={() => handleFillSample('traeume1')}
+              className="h-7 px-2.5 rounded-full"
+            >
+              <Icon as={Sparkles} className="size-3 text-muted-foreground mr-1" />
+              <Text className="text-[11px]">Träume 1</Text>
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onPress={() => handleFillSample('traeume2')}
+              className="h-7 px-2.5 rounded-full"
+            >
+              <Icon as={Sparkles} className="size-3 text-muted-foreground mr-1" />
+              <Text className="text-[11px]">Träume 2</Text>
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onPress={() => handleFillSample('verwandlung')}
+              className="h-7 px-2.5 rounded-full"
+            >
+              <Text className="text-[11px]">Verwandlung</Text>
+            </Button>
+          </View>
         </View>
 
         {/* Success Banner when a book was added */}
@@ -410,6 +455,14 @@ export default function AddBookTab() {
                 </View>
               )}
             </View>
+
+            {/* Genres Selection Dropdown */}
+            <GenreSelect
+              selectedGenres={genres}
+              onChange={setGenres}
+              label="Genres (optional)"
+              placeholder="Buch-Genres auswählen (Mehrfachauswahl)..."
+            />
 
             {/* Description Input */}
             <View className="gap-1.5">

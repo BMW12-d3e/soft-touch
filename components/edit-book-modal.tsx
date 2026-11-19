@@ -19,6 +19,7 @@ import {
 } from 'lucide-react-native';
 
 import type { Book } from '@/components/book-card';
+import { GenreSelect } from '@/components/genre-select';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -39,6 +40,7 @@ type EditBookModalProps = {
   visible: boolean;
   onClose: () => void;
   onSave: (originalIsbn: string, updatedBook: Book) => void;
+  onDelete?: (isbn: string) => void;
 };
 
 export function EditBookModal({
@@ -46,14 +48,17 @@ export function EditBookModal({
   visible,
   onClose,
   onSave,
+  onDelete,
 }: EditBookModalProps) {
   const [title, setTitle] = React.useState('');
   const [author, setAuthor] = React.useState('');
   const [isbn, setIsbn] = React.useState('');
   const [coverUri, setCoverUri] = React.useState('');
   const [description, setDescription] = React.useState('');
+  const [genres, setGenres] = React.useState<string[]>([]);
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
   const [showUrlInput, setShowUrlInput] = React.useState(false);
+  const [isConfirmingDelete, setIsConfirmingDelete] = React.useState(false);
 
   const fileInputRef = React.useRef<HTMLInputElement | null>(null);
   const authorInputRef = React.useRef<TextInput>(null);
@@ -68,8 +73,10 @@ export function EditBookModal({
       setIsbn(book.isbn || '');
       setCoverUri(book.coverUri || '');
       setDescription(book.description || '');
+      setGenres(book.genres || []);
       setErrorMessage(null);
       setShowUrlInput(false);
+      setIsConfirmingDelete(false);
     }
   }, [book]);
 
@@ -113,9 +120,17 @@ export function EditBookModal({
       isbn: isbn.trim() || book.isbn,
       coverUri: coverUri.trim() || undefined,
       description: description.trim() || undefined,
+      genres: genres.length > 0 ? genres : undefined,
     };
 
     onSave(book.isbn, updatedBook);
+    onClose();
+  }
+
+  function handleDelete() {
+    if (!book || !onDelete) return;
+    onDelete(book.isbn);
+    setIsConfirmingDelete(false);
     onClose();
   }
 
@@ -151,9 +166,9 @@ export function EditBookModal({
             {/* Modal Header */}
             <CardHeader className="flex-row items-center justify-between pb-3 border-b border-border">
               <View className="flex-1 pr-2">
-                <CardTitle className="text-lg">Buch bearbeiten</CardTitle>
+                <CardTitle className="text-lg">Buchdetails</CardTitle>
                 <CardDescription numberOfLines={1}>
-                  Details für &quot;{book.title}&quot; anpassen
+                  Details für &quot;{book.title}&quot; ansehen, bearbeiten oder löschen
                 </CardDescription>
               </View>
               <Button
@@ -341,6 +356,14 @@ export function EditBookModal({
                 </View>
               </View>
 
+              {/* Genre Selection */}
+              <GenreSelect
+                selectedGenres={genres}
+                onChange={setGenres}
+                label="Genres"
+                placeholder="Genres auswählen..."
+              />
+
               {/* Description */}
               <View className="gap-1.5">
                 <Label htmlFor="edit-description">Beschreibung / Notizen</Label>
@@ -359,14 +382,54 @@ export function EditBookModal({
             </ScrollView>
 
             {/* Modal Footer Actions */}
-            <CardFooter className="flex-row justify-end gap-2 p-4 border-t border-border bg-muted/10">
-              <Button variant="outline" size="sm" onPress={onClose}>
-                <Text>Abbrechen</Text>
-              </Button>
-              <Button size="sm" className="flex-row items-center gap-1.5" onPress={handleSave}>
-                <Icon as={Check} className="size-4 text-primary-foreground" />
-                <Text>Speichern</Text>
-              </Button>
+            <CardFooter className="flex-row items-center justify-between gap-2 p-4 border-t border-border bg-muted/10">
+              {/* Delete Button / Confirmation */}
+              {onDelete ? (
+                isConfirmingDelete ? (
+                  <View className="flex-row items-center gap-1.5">
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      className="flex-row items-center gap-1 h-8 px-2.5"
+                      onPress={handleDelete}
+                    >
+                      <Icon as={Trash2} className="size-3.5 text-white" />
+                      <Text className="text-xs text-white font-medium">Löschen bestätigen</Text>
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-8 px-2"
+                      onPress={() => setIsConfirmingDelete(false)}
+                    >
+                      <Text className="text-xs">Nein</Text>
+                    </Button>
+                  </View>
+                ) : (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="flex-row items-center gap-1.5 h-8 px-2"
+                    onPress={() => setIsConfirmingDelete(true)}
+                  >
+                    <Icon as={Trash2} className="size-4 text-destructive" />
+                    <Text className="text-xs text-destructive font-medium">Buch löschen</Text>
+                  </Button>
+                )
+              ) : (
+                <View />
+              )}
+
+              {/* Action Buttons: Cancel and Save */}
+              <View className="flex-row items-center gap-2">
+                <Button variant="outline" size="sm" onPress={onClose}>
+                  <Text>Abbrechen</Text>
+                </Button>
+                <Button size="sm" className="flex-row items-center gap-1.5" onPress={handleSave}>
+                  <Icon as={Check} className="size-4 text-primary-foreground" />
+                  <Text>Speichern</Text>
+                </Button>
+              </View>
             </CardFooter>
           </Card>
         </KeyboardAvoidingView>
@@ -374,4 +437,3 @@ export function EditBookModal({
     </Modal>
   );
 }
-
